@@ -20,9 +20,9 @@
     "noUnusedParameters": true,
     "target": "es6",
     "module": "commonjs",
-    "typeRoots": ["node_modules/@types"],
+    "typeRoots": ["node_modules/@types", "types"],
     "lib": ["es2017", "es2015", "dom"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "types/*.d.ts"],
   "exclude": ["node_modules"]
 }
