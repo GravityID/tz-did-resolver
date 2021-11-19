@@ -1,17 +1,17 @@
+import { ChainIds } from "@taquito/taquito";
+import { Prefix, validateAddress, ValidationResult } from "@taquito/utils";
 import {
-  ParsedDID,
-  Resolver,
+  DIDDocument,
   DIDResolutionOptions,
   DIDResolutionResult,
   DIDResolver,
+  ParsedDID,
+  Resolver,
   VerificationMethod,
-  DIDDocument,
 } from "did-resolver";
-import { Prefix, validateAddress, ValidationResult } from "@taquito/utils";
 
 enum TezosNetworks {
   GRANADANET = "granadanet",
-  FLORENCENET = "florencenet",
   MAINNET = "mainnet",
 }
 
@@ -23,7 +23,7 @@ async function resolve(
   did: string,
   parsed: ParsedDID,
   _didResolver: Resolver,
-  options: DIDResolutionOptions
+  _options: DIDResolutionOptions
 ): Promise<DIDResolutionResult> {
   const EMPTY_RESULT: DIDResolutionResult = {
     didResolutionMetadata: {},
@@ -31,18 +31,12 @@ async function resolve(
     didDocumentMetadata: {},
   };
 
-  console.log("did = %s", did);
-  for (let [key, value] of Object.entries(parsed))
-    console.log("parsed.%s = %s", key, value);
-  for (let [key, value] of Object.entries(options))
-    console.log("options.%s = %s", key, value);
-
   const arr = parsed.id.split(":");
 
   if (arr.length !== 1 && arr.length !== 2) {
     return {
       ...EMPTY_RESULT,
-      didResolutionMetadata: { error: "invalidIdentifier" },
+      didResolutionMetadata: { error: "invalidDid" },
     };
   }
 
@@ -52,17 +46,17 @@ async function resolve(
   if (validAddress !== ValidationResult.VALID) {
     return {
       ...EMPTY_RESULT,
-      didResolutionMetadata: { error: "invalidTezosAddress" },
+      didResolutionMetadata: { error: "invalidDid" },
     };
   }
 
-  const network = arr.length === 2 && arr[0];
+  const network = arr.length === 2 ? arr[0] : TezosNetworks.MAINNET;
   const validNetwork = validateNetwork(network);
 
-  if (typeof network === "string" && !validNetwork) {
+  if (!validNetwork) {
     return {
       ...EMPTY_RESULT,
-      didResolutionMetadata: { error: "invalidTezosNetwork" },
+      didResolutionMetadata: { error: "invalidDid" },
     };
   }
 
@@ -73,17 +67,24 @@ async function resolve(
     };
   }
 
+  const chainId = ChainIds[network.toUpperCase() as "MAINNET" | "GRANADANET"];
+
   const verificationMethod: VerificationMethod = {
     id: `${did}#blockchainAccountId`,
     type: "Ed25519PublicKeyBLAKE2BDigestSize20Base58CheckEncoded2021",
     controller: did,
-    blockchainAccountId: `${address}@tezos${network ? `:${network}` : ""}`,
+    blockchainAccountId: `tezos:${chainId}:${address}`,
   };
 
   const didDocument: DIDDocument = {
-    "@context": "https://www.w3.org/ns/did/v1",
+    "@context": [
+      "https://www.w3.org/ns/did/v1",
+      "https://w3id.org/security/v1",
+    ],
     id: did,
-    authentication: [verificationMethod],
+    verificationMethod: [verificationMethod],
+    authentication: [verificationMethod.id],
+    assertionMethod: [verificationMethod.id],
   };
 
   return {
