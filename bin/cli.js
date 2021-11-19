@@ -1,5 +1,4 @@
-#!/home/francois/.nvm/versions/node/v14.18.1/bin/node
-
+#!/usr/bin/env node
 const { Command } = require("commander");
 const pjson = require("../package.json");
 const program = new Command(pjson.name);
@@ -23,7 +22,7 @@ program
       const result = await resolver.resolve(did);
       const json = JSON.stringify(result, null, 2);
 
-      console.log("\n\n", json);
+      console.log(json);
     }
   );
 
