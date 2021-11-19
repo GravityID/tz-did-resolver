@@ -6,3 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+- Files
+	- `CHANGELOG.md`
+	- `tsconfig.json`
+	- `bin/`
+	- `src/`
+	- `test/`
+- Features
+	- DID resolution [layer 1](https://did-tezos-draft.spruceid.com/#implied-did-document) for MAINNET (chain id `NetXdQprcVkpaWU`) and GRANADANET (chain id `NetXz969SFaFn8k`)
+
+## [1.0.0] - TBC
