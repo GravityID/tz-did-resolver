@@ -52,7 +52,7 @@ The minimal DID Document for a Tezos address `did:tz:tz1TzrmTBSuiVHV2VfMnGRMYvTE
 
 ##  Building a DID document
 
-The DID Document is not stored as a file, but is built by using [`tzip-16`](https://tzip.tezosagora.org/proposal/tzip-16/) views functions.
+The DID Document is not stored as a file, but is built by using [`tzip-16`](https://tzip.tezosagora.org/proposal/tzip-16/) views functions present on the DID Manager smart contract.
 
 Please see the [spec](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-19/tzip-19.md) for details of how the DID document and corresponding metadata are computed.
 
