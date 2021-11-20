@@ -50,6 +50,7 @@ describe("DID Resolver", function () {
       expect(result.didDocument).to.be.null;
       expect(result.didDocumentMetadata).to.be.an("object").and.to.be.empty;
     });
+
     it("should fail resolving from a DID that is not using a known DID Method", async function () {
       const did = "did:eth:" + faker.random.alphaNumeric();
       const result = await resolver.resolve(did);
@@ -69,9 +70,7 @@ describe("DID Resolver", function () {
       expect(result.didDocument).to.be.null;
       expect(result.didDocumentMetadata).to.be.an("object").and.to.be.empty;
     });
-    it(
-      "should fail resolving with a requested representation that is not supported"
-    );
+
     it("should fail resolving from a DID that has an invalid Tezos address as specific identifier", async function () {
       const did = "did:tz:" + faker.random.alphaNumeric();
       const result = await resolver.resolve(did);
@@ -87,10 +86,11 @@ describe("DID Resolver", function () {
         .to.be.an("object")
         .and.to.have.property("error")
         .and.to.be.a("string")
-        .and.to.equal("invalidTezosAddress");
+        .and.to.equal("invalidDid");
       expect(result.didDocument).to.be.null;
       expect(result.didDocumentMetadata).to.be.an("object").and.to.be.empty;
     });
+
     it("should successfully resolve an implied DID Document from a valid DID", async function () {
       const did = "did:tz:tz1TzrmTBSuiVHV2VfMnGRMYvTEPCP42oSM8";
 
