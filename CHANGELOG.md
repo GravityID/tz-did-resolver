@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.0.0] - 2021-11-20
+
 ### Added
 
 - Files
@@ -18,4 +20,3 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Features
 	- DID resolution [layer 1](https://did-tezos-draft.spruceid.com/#implied-did-document) for MAINNET (chain id `NetXdQprcVkpaWU`) and GRANADANET (chain id `NetXz969SFaFn8k`)
 
-## [1.0.0] - TBC
