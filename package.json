@@ -16,7 +16,7 @@
   "scripts": {
     "build": "rm -rf lib && tsc -p tsconfig.json",
     "build:watch": "rm -rf lib && tsc -p tsconfig.json --watch",
-    "test": "mocha -r ts-node/register test/**/*.ts"
+    "test": "mocha -r ts-node/register -t 30000 test/**/*.ts"
   },
   "repository": {
     "type": "git",
@@ -40,11 +40,10 @@
   },
   "homepage": "https://github.com/GravityID/tz-did-resolver#readme",
   "dependencies": {
-    "@spruceid/didkit": "^0.2.2",
     "@taquito/taquito": "9.2.0",
     "@taquito/tzip16": "9.2.0",
     "@taquito/utils": "9.2.0",
-    "axios": "0.24.0"
+    "axios": "^0.24.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.22",
