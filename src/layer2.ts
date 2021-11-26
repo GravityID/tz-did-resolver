@@ -5,6 +5,7 @@ import {
   DIDResolutionResult,
   ServiceEndpoint,
   VerificationMethod,
+  parse,
 } from "did-resolver";
 
 interface AccountContract {
@@ -94,12 +95,14 @@ export async function update(
     .GetVerificationMethod()
     .executeView();
 
-  const [_controller, _type] = _verificationMethod.split("#");
-  if (!_controller || !_type) {
+  const _parse = parse(_verificationMethod);
+  if (_parse === null || !_parse.fragment) {
     result.didResolutionMetadata.error = "invalidDidUrl";
 
     return;
   }
+
+  const { fragment: _type, did: _controller } = _parse;
 
   const verificationMethod: VerificationMethod = {
     id: _verificationMethod,
