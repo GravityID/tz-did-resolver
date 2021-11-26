@@ -92,7 +92,7 @@ describe("DID Resolver", function () {
     });
 
     it("should successfully resolve an implied DID Document from a valid DID", async function () {
-      const did = "did:tz:tz1TzrmTBSuiVHV2VfMnGRMYvTEPCP42oSM8";
+      const did = "did:tz:granadanet:tz1TzrmTBSuiVHV2VfMnGRMYvTEPCP42oSM8";
 
       const result = await resolver.resolve(did);
 
@@ -108,6 +108,25 @@ describe("DID Resolver", function () {
         .and.to.not.have.property("error");
       expect(result.didDocument).to.be.an("object").and.to.not.be.empty;
       expect(result.didDocumentMetadata).to.be.an("object").and.to.be.empty;
+    });
+
+    it("should successfully resolve a deployed DID Document from a valid DID", async function () {
+      const did = "did:tz:granadanet:tz1Mmhk4yVqnvKkciEgqDBjwNDAn7DtWaPkG";
+
+      const result = await resolver.resolve(did);
+
+      expect(result)
+        .to.be.an("object")
+        .and.to.have.keys(
+          "didResolutionMetadata",
+          "didDocument",
+          "didDocumentMetadata"
+        );
+      expect(result.didResolutionMetadata)
+        .to.be.an("object")
+        .and.to.not.have.property("error");
+      expect(result.didDocument).to.be.an("object").and.to.not.be.empty;
+      expect(result.didDocumentMetadata).to.be.an("object").and.to.not.be.empty;
     });
   });
 });
