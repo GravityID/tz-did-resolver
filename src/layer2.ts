@@ -8,6 +8,28 @@ import {
   parse,
 } from "did-resolver";
 
+interface ContractAccount {
+  type: "contract";
+  address: string;
+  kind: string;
+  balance: number;
+  creator: {
+    address: string;
+  };
+  numContracts: number;
+  numDelegations: number;
+  numOriginations: number;
+  numTransactions: number;
+  numReveals: number;
+  numMigrations: number;
+  firstActivity: number;
+  firstActivityTime: string;
+  lastActivity: number;
+  lastActivityTime: string;
+  typeHash: number;
+  codeHash: number;
+}
+
 interface AccountContract {
   kind: string;
   address: string;
@@ -27,12 +49,12 @@ async function findManager(
     indexer: string;
     address: string;
   }
-): Promise<AccountContract | null> {
-  const response = await axios.get<AccountContracts>(
+): Promise<ContractAccount | null> {
+  const contracts = await axios.get<AccountContracts>(
     `${indexer}/v1/accounts/${address}/contracts`
   );
 
-  for (let d of response.data) {
+  for (let d of contracts.data) {
     if (d.kind !== "smart_contract") continue;
 
     const contract = await tezosToolkit.contract.at(d.address, tzip16);
@@ -44,7 +66,10 @@ async function findManager(
     if (!(views.GetVerificationMethod instanceof Function)) continue;
     if (!(views.GetService instanceof Function)) continue;
 
-    return d;
+    const response = await axios.get<ContractAccount>(
+      `${indexer}/v1/accounts/${d.address}`
+    );
+    return response.data;
   }
 
   return null;
@@ -121,5 +146,6 @@ export async function update(
   };
   result.didDocument.service = [service];
 
-  result.didDocumentMetadata.created = d.creationTime;
+  result.didDocumentMetadata.created = d.firstActivityTime;
+  result.didDocumentMetadata.updated = d.lastActivityTime;
 }
