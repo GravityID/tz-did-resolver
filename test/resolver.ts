@@ -126,7 +126,9 @@ describe("DID Resolver", function () {
         .to.be.an("object")
         .and.to.not.have.property("error");
       expect(result.didDocument).to.be.an("object").and.to.not.be.empty;
-      expect(result.didDocumentMetadata).to.be.an("object").and.to.not.be.empty;
+      expect(result.didDocumentMetadata)
+        .to.be.an("object")
+        .and.to.have.keys("created", "updated");
     });
   });
 });
