@@ -1,4 +1,5 @@
 import { TezosToolkit } from "@taquito/taquito";
+import { Prefix } from "@taquito/utils";
 import { DIDResolutionResult, VerificationMethod } from "did-resolver";
 
 export async function update(
@@ -6,9 +7,8 @@ export async function update(
   result: DIDResolutionResult,
   { address }: { address: string }
 ): Promise<void> {
+  if (address.startsWith(Prefix.KT1)) return;
   if (result.didDocument === null) return;
-
-  result.didResolutionMetadata.contentType = "application/did+ld+json";
 
   const did = result.didDocument.id;
   const chainId = await tezosToolkit.rpc.getChainId();

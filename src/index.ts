@@ -1,7 +1,6 @@
 import { HttpRequestFailed, HttpResponseError } from "@taquito/http-utils";
 import { TezosToolkit } from "@taquito/taquito";
 import { Tzip16Module } from "@taquito/tzip16";
-import { Prefix } from "@taquito/utils";
 import {
   DIDResolutionOptions,
   DIDResolutionResult,
@@ -35,13 +34,7 @@ async function resolve(
 
   const { network, address } = validIdentifier;
 
-  if (parsed.id.startsWith(Prefix.KT1)) {
-    return {
-      ...result,
-      didResolutionMetadata: { error: "notImplemented" },
-    };
-  }
-
+  result.didResolutionMetadata.contentType = "application/did+ld+json";
   result.didDocument = {
     "@context": [
       "https://www.w3.org/ns/did/v1",

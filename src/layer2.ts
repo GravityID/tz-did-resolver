@@ -1,5 +1,6 @@
 import { TezosToolkit } from "@taquito/taquito";
 import { tzip16 } from "@taquito/tzip16";
+import { Prefix } from "@taquito/utils";
 import axios from "axios";
 import {
   DIDResolutionResult,
@@ -93,6 +94,7 @@ export async function update(
     address: string;
   }
 ): Promise<void> {
+  if (address.startsWith(Prefix.KT1)) throw new Error("Not implemented");
   if (result.didDocument === null) return;
   if (!result.didDocument.verificationMethod) return;
 
