@@ -103,12 +103,13 @@ export async function update(
   }
 
   const { fragment: _type, did: _controller } = _parse;
+  const [_, _address] = _parse.id.split(":");
 
   const verificationMethod: VerificationMethod = {
     id: _verificationMethod,
     type: _type,
     controller: _controller,
-    blockchainAccountId: `tezos:${chainId}:${address}`,
+    blockchainAccountId: `tezos:${chainId}:${_address}`,
   };
   result.didDocument.verificationMethod.push(verificationMethod);
 
