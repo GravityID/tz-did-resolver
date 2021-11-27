@@ -16,7 +16,7 @@ async function resolve(
   did: string,
   parsed: ParsedDID,
   _didResolver: Resolver,
-  _options: DIDResolutionOptions
+  options: DIDResolutionOptions
 ): Promise<DIDResolutionResult> {
   const result: DIDResolutionResult = {
     didResolutionMetadata: {},
@@ -49,10 +49,10 @@ async function resolve(
     id: did,
   };
 
-  const rpc = `https://${network}.api.tez.ie`;
+  const rpc = options.rpc || `https://${network}.api.tez.ie`;
   const tezosToolkit = new TezosToolkit(rpc);
   tezosToolkit.addExtension(new Tzip16Module());
-  const indexer = `https://api.${network}.tzkt.io`;
+  const indexer = options.indexer || `https://api.${network}.tzkt.io`;
 
   await updateLayer1(tezosToolkit, result, { address });
 
