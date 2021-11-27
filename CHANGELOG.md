@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.1.0] - 2021-11-27
+
 ### Added
 
 - Files
@@ -13,11 +15,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 	- `src/layer2.ts`
 	- `src/utils.ts`
 - Features
-	- DID resolution [layer 2](https://did-tezos-draft.spruceid.com/#did-manager-smart-contract) on MAINNET (chain id `NetXdQprcVkpaWU`) and GRANADANET (chain id `NetXz969SFaFn8k`) for implicit accounts (addresses starting with `tz1`, `tz2`, and `tz3`)
+	- DID resolution [layer 2](https://did-tezos-draft.spruceid.com/#did-manager-smart-contract) on MAINNET (chain id `NetXdQprcVkpaWU`) and GRANADANET (chain id `NetXz969SFaFn8k`) for implicit accounts (addresses starting with `tz1`, `tz2`, and `tz3`). DID resolution for contract accounts (addresses starting with `KT1`) currently fails with `Not implemented`
+	- New options on CLI
+```sh
+  --rpc <rpc>          rpc url to use to interact with the Tezos network (default: "http://localhost:8732", env: TEZOS_RPC)
+  --indexer <indexer>  indexer url to use to interact with the Tezos network (default: "http://localhost:8080", env: TEZOS_INDEXER)
+```
 	
 ### Changed
 
 - Source code splitted in multiple files
+- Resolver uses `options.rpc` (resp. `options.indexer`) as rpc url (resp. indexer url)
 
 ## [1.0.0] - 2021-11-20
 
@@ -32,4 +40,3 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 	- `test/`
 - Features
 	- DID resolution [layer 1](https://did-tezos-draft.spruceid.com/#implied-did-document) on MAINNET (chain id `NetXdQprcVkpaWU`) and GRANADANET (chain id `NetXz969SFaFn8k`)
-
