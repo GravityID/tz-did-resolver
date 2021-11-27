@@ -1,3 +1,4 @@
+import { HttpRequestFailed, HttpResponseError } from "@taquito/http-utils";
 import { TezosToolkit } from "@taquito/taquito";
 import { Tzip16Module } from "@taquito/tzip16";
 import { Prefix } from "@taquito/utils";
@@ -54,11 +55,20 @@ async function resolve(
   tezosToolkit.addExtension(new Tzip16Module());
   const indexer = options.indexer || `https://api.${network}.tzkt.io`;
 
-  await updateLayer1(tezosToolkit, result, { address });
-
-  await updateLayer2(tezosToolkit, result, { indexer, address });
-
-  return result;
+  try {
+    await updateLayer1(tezosToolkit, result, { address });
+    await updateLayer2(tezosToolkit, result, { indexer, address });
+  } catch (err) {
+    const message =
+      err instanceof Error ||
+      err instanceof HttpResponseError ||
+      err instanceof HttpRequestFailed
+        ? err.message
+        : "Unknown error";
+    result.didResolutionMetadata.error = message;
+  } finally {
+    return result;
+  }
 }
 
 export default {
