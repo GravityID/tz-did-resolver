@@ -40,6 +40,9 @@ interface AccountContract {
 
 type AccountContracts = Array<AccountContract>;
 
+/**
+ * @todo Use @taquito/idx when available {@link https://github.com/ecadlabs/taquito/issues/185}
+ */
 async function findManager(
   tezosToolkit: TezosToolkit,
   {
@@ -77,7 +80,7 @@ async function findManager(
 
 /**
  * @todo Push only verification method id when `did-resolver` supports it
- * @todo Check validity of verification method id by DID URL dereferencing when `did-resolver` supports it
+ * @todo Check existence of verification method by DID URL dereferencing when `did-resolver` supports it
  */
 export async function update(
   tezosToolkit: TezosToolkit,
@@ -100,11 +103,7 @@ export async function update(
 
   const contract = await tezosToolkit.contract.at(d.address, tzip16);
   const { metadata } = await contract.tzip16().getMetadata();
-  if (metadata.errors) {
-    result.didResolutionMetadata.error = "tzip16Error";
-
-    return;
-  }
+  if (metadata.errors) throw new Error("Invalid Tzip16");
 
   result.didResolutionMetadata = Object.assign(
     {},
@@ -121,11 +120,7 @@ export async function update(
     .executeView();
 
   const _parse = parse(_verificationMethod);
-  if (_parse === null || !_parse.fragment) {
-    result.didResolutionMetadata.error = "invalidDidUrl";
-
-    return;
-  }
+  if (_parse === null || !_parse.fragment) throw new Error("Invalid DID URL");
 
   const { fragment: _type, did: _controller } = _parse;
   const [_, _address] = _parse.id.split(":");
