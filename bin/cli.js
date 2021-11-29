@@ -19,7 +19,6 @@ program
       "rpc url to use to interact with the Tezos network"
     )
       .env("TEZOS_RPC")
-      .default("http://localhost:8732")
   )
   .addOption(
     new Option(
@@ -27,7 +26,6 @@ program
       "indexer url to use to interact with the Tezos network"
     )
       .env("TEZOS_INDEXER")
-      .default("http://localhost:8080")
   )
   .description("resolve a DID using the Tezos DID method")
   .action(
