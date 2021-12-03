@@ -40,7 +40,6 @@
   },
   "homepage": "https://github.com/GravityID/tz-did-resolver#readme",
   "dependencies": {
-    "@spruceid/didkit": "^0.3.0-beta.3",
     "@taquito/taquito": "9.2.0",
     "@taquito/tzip16": "9.2.0",
     "@taquito/utils": "9.2.0",
