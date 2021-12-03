@@ -1,8 +1,8 @@
-import DIDKit from "@spruceid/didkit";
 import { TezosToolkit } from "@taquito/taquito";
+import { b58cdecode, prefix } from "@taquito/utils";
 import { DIDResolutionResult } from "did-resolver";
 import { applyOperation, Operation } from "fast-json-patch";
-import { importJWK, JWK, jwtVerify } from "jose";
+import { importJWK, jwtVerify } from "jose";
 
 export async function update(
   _tezosToolkit: TezosToolkit,
@@ -18,12 +18,17 @@ export async function update(
 
   if (!publicKey) throw new Error("Need public key for signed patches");
 
-  const jwk = DIDKit.jwkFromTezosKey(publicKey);
-  const publicKeyJWK = await importJWK(jwk as JWK);
+  const buff = Buffer.from(b58cdecode(publicKey, prefix.edpk));
+  const jwk = await importJWK({
+    alg: "EdBlake2b",
+    crv: "Ed25519",
+    kty: "OKP",
+    x: buff.toString("base64"),
+  });
 
   const { payload, protectedHeader } = await jwtVerify(
     signedIetfJsonPatch,
-    publicKeyJWK
+    jwk
   );
 
   if (!protectedHeader.kid) throw new Error("Missing 'kid' header property");
