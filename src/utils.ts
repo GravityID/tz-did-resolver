@@ -1,3 +1,4 @@
+import { ChainIds } from "@taquito/taquito";
 import {
   validateAddress as _validateAddress,
   ValidationResult,
@@ -6,6 +7,14 @@ import {
 enum TezosNetworks {
   GRANADANET = "granadanet",
   MAINNET = "mainnet",
+}
+
+export function networkToChainId(network: string): ChainIds | undefined {
+  const entry = Object.entries(ChainIds).find(([_network, _chainId]) => {
+    return network.toUpperCase() === _network;
+  });
+
+  return entry && entry[1];
 }
 
 export function validateNetwork(network: string): boolean {
