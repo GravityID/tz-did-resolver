@@ -3,15 +3,14 @@ import { Prefix } from "@taquito/utils";
 import { DIDResolutionResult, VerificationMethod } from "did-resolver";
 
 export async function update(
-  tezosToolkit: TezosToolkit,
+  _tezosToolkit: TezosToolkit,
   result: DIDResolutionResult,
-  { address }: { address: string }
+  { address, chainId }: { address: string; chainId: string }
 ): Promise<void> {
   if (address.startsWith(Prefix.KT1)) return;
   if (result.didDocument === null) return;
 
   const did = result.didDocument.id;
-  const chainId = await tezosToolkit.rpc.getChainId();
 
   const verificationMethod: VerificationMethod = {
     id: `${did}#blockchainAccountId`,
