@@ -17,15 +17,25 @@ program
     new Option(
       "--rpc <rpc>",
       "rpc url to use to interact with the Tezos network"
-    )
-      .env("TEZOS_RPC")
+    ).env("TEZOS_RPC")
   )
   .addOption(
     new Option(
       "--indexer <indexer>",
       "indexer url to use to interact with the Tezos network"
+    ).env("TEZOS_INDEXER")
+  )
+  .addOption(
+    new Option(
+      "--publicKey <publicKey>",
+      "base58 encoded public key to use for authentication"
     )
-      .env("TEZOS_INDEXER")
+  )
+  .addOption(
+    new Option(
+      "--signedIetfJsonPatch <signedIetfJsonPatch>",
+      "changes proposed by a controller in JWS format"
+    )
   )
   .description("resolve a DID using the Tezos DID method")
   .action(
