@@ -10,7 +10,7 @@ import {
 } from "did-resolver";
 import { update as updateLayer1 } from "./layer1";
 import { update as updateLayer2 } from "./layer2";
-import { validateIdentifier } from "./utils";
+import { networkToChainId, validateIdentifier } from "./utils";
 
 async function resolve(
   did: string,
@@ -34,6 +34,14 @@ async function resolve(
 
   const { network, address } = validIdentifier;
 
+  const chainId = networkToChainId(network);
+  if (!chainId) {
+    return {
+      ...result,
+      didResolutionMetadata: { error: "invalidDid" },
+    };
+  }
+
   result.didResolutionMetadata.contentType = "application/did+ld+json";
   result.didDocument = {
     "@context": [
@@ -49,8 +57,12 @@ async function resolve(
   const indexer = options.indexer || `https://api.${network}.tzkt.io`;
 
   try {
-    await updateLayer1(tezosToolkit, result, { address });
-    await updateLayer2(tezosToolkit, result, { indexer, address });
+    await updateLayer1(tezosToolkit, result, { address, chainId });
+    await updateLayer2(tezosToolkit, result, {
+      indexer,
+      address,
+      chainId,
+    });
   } catch (err) {
     const message =
       err instanceof Error ||

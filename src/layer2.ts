@@ -87,14 +87,20 @@ export async function update(
   tezosToolkit: TezosToolkit,
   result: DIDResolutionResult,
   {
-    indexer,
     address,
+    chainId,
+    indexer,
   }: {
-    indexer: string;
     address: string;
+    chainId: string;
+    indexer: string;
   }
 ): Promise<void> {
   if (address.startsWith(Prefix.KT1)) throw new Error("Not implemented");
+
+  const _chainId = await tezosToolkit.rpc.getChainId();
+  if (chainId !== _chainId) throw new Error("chainMismatch");
+
   if (result.didDocument === null) return;
   if (!result.didDocument.verificationMethod) return;
 
@@ -114,7 +120,6 @@ export async function update(
   );
   delete result.didResolutionMetadata.views;
 
-  const chainId = await tezosToolkit.rpc.getChainId();
   const views = await contract.tzip16().metadataViews();
 
   const _verificationMethod: string = await views
@@ -131,7 +136,7 @@ export async function update(
     id: _verificationMethod,
     type: _type,
     controller: _controller,
-    blockchainAccountId: `tezos:${chainId}:${_address}`,
+    blockchainAccountId: `tezos:${_chainId}:${_address}`,
   };
   result.didDocument.verificationMethod.push(verificationMethod);
 
