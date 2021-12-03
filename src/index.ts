@@ -10,6 +10,7 @@ import {
 } from "did-resolver";
 import { update as updateLayer1 } from "./layer1";
 import { update as updateLayer2 } from "./layer2";
+import { update as updateLayer3 } from "./layer3";
 import { networkToChainId, validateIdentifier } from "./utils";
 
 async function resolve(
@@ -56,12 +57,18 @@ async function resolve(
   tezosToolkit.addExtension(new Tzip16Module());
   const indexer = options.indexer || `https://api.${network}.tzkt.io`;
 
+  const { publicKey, signedIetfJsonPatch } = options;
+
   try {
-    await updateLayer1(tezosToolkit, result, { address, chainId });
+    await updateLayer1(tezosToolkit, result, { address, chainId, publicKey });
     await updateLayer2(tezosToolkit, result, {
-      indexer,
       address,
       chainId,
+      indexer,
+    });
+    await updateLayer3(tezosToolkit, result, {
+      publicKey,
+      signedIetfJsonPatch,
     });
   } catch (err) {
     const message =
