@@ -16,7 +16,7 @@
   "scripts": {
     "build": "rm -rf lib && tsc -p tsconfig.json",
     "build:watch": "rm -rf lib && tsc -p tsconfig.json --watch",
-    "test": "mocha -r ts-node/register -t 30000 test/**/*.ts"
+    "test": "mocha -r ts-node/register -t 50000 test/**/*.ts"
   },
   "repository": {
     "type": "git",
