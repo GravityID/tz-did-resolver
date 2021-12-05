@@ -85,6 +85,7 @@ describe("DID Resolver", function () {
       expect(result)
         .to.be.an("object")
         .and.to.have.keys(
+          "@context",
           "didResolutionMetadata",
           "didDocument",
           "didDocumentMetadata"
@@ -107,6 +108,7 @@ describe("DID Resolver", function () {
         expect(result)
           .to.be.an("object")
           .and.to.have.keys(
+            "@context",
             "didResolutionMetadata",
             "didDocument",
             "didDocumentMetadata"
@@ -140,6 +142,7 @@ describe("DID Resolver", function () {
         expect(result)
           .to.be.an("object")
           .and.to.have.keys(
+            "@context",
             "didResolutionMetadata",
             "didDocument",
             "didDocumentMetadata"
@@ -175,6 +178,7 @@ describe("DID Resolver", function () {
         expect(result)
           .to.be.an("object")
           .and.to.have.keys(
+            "@context",
             "didResolutionMetadata",
             "didDocument",
             "didDocumentMetadata"
@@ -200,6 +204,7 @@ describe("DID Resolver", function () {
         expect(result)
           .to.be.an("object")
           .and.to.have.keys(
+            "@context",
             "didResolutionMetadata",
             "didDocument",
             "didDocumentMetadata"
@@ -230,6 +235,7 @@ describe("DID Resolver", function () {
         expect(result)
           .to.be.an("object")
           .and.to.have.keys(
+            "@context",
             "didResolutionMetadata",
             "didDocument",
             "didDocumentMetadata"
@@ -277,6 +283,7 @@ describe("DID Resolver", function () {
         expect(result)
           .to.be.an("object")
           .and.to.have.keys(
+            "@context",
             "didResolutionMetadata",
             "didDocument",
             "didDocumentMetadata"
@@ -326,6 +333,7 @@ describe("DID Resolver", function () {
         expect(result)
           .to.be.an("object")
           .and.to.have.keys(
+            "@context",
             "didResolutionMetadata",
             "didDocument",
             "didDocumentMetadata"
@@ -363,6 +371,7 @@ describe("DID Resolver", function () {
         expect(result)
           .to.be.an("object")
           .and.to.have.keys(
+            "@context",
             "didResolutionMetadata",
             "didDocument",
             "didDocumentMetadata"
