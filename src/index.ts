@@ -20,6 +20,7 @@ async function resolve(
   options: DIDResolutionOptions
 ): Promise<DIDResolutionResult> {
   const result: DIDResolutionResult = {
+    "@context": "https://w3id.org/did-resolution/v1",
     didResolutionMetadata: {},
     didDocument: null,
     didDocumentMetadata: {},
