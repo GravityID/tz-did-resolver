@@ -4,13 +4,6 @@ import * as faker from "faker";
 import { importJWK, SignJWT } from "jose";
 import tz from "../src/index";
 
-const jwk = {
-  kty: "OKP",
-  crv: "Ed25519",
-  x: "ROm8DWLwygV95uSyAafOsjdRWCTAKu-Hfa4IFBkODtQ",
-  d: "l6Oqs9z3qB9XQZrJvw2KPuvvQDNV0pU2AnuKN30yXLA",
-};
-
 describe("DID Resolver", function () {
   let resolver: Resolver;
 
@@ -194,6 +187,13 @@ describe("DID Resolver", function () {
     });
 
     describe("Layer 3", function () {
+      const jwk = {
+        kty: "OKP",
+        crv: "Ed25519",
+        x: "ROm8DWLwygV95uSyAafOsjdRWCTAKu-Hfa4IFBkODtQ",
+        d: "l6Oqs9z3qB9XQZrJvw2KPuvvQDNV0pU2AnuKN30yXLA",
+      };
+
       it("should fail applying a patch without public key", async function () {
         const signedIetfJsonPatch =
           "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp0ejpkZWxwaGluZXQ6dHoxV3Z2YkVHcEJYR2VUVmJMaVI2RFlCZTFpem1naVl1WmJxI2Jsb2NrY2hhaW5BY2NvdW50SWQifQ.eyJpZXRmLWpzb24tcGF0Y2giOiBbCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIm9wIjogImFkZCIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInBhdGgiOiAiL3NlcnZpY2UvMSIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInZhbHVlIjogewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiaWQiOiAidGVzdF9zZXJ2aWNlX2lkIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInR5cGUiOiAidGVzdF9zZXJ2aWNlIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInNlcnZpY2VFbmRwb2ludCI6ICJ0ZXN0X3NlcnZpY2VfZW5kcG9pbnQiCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBdfQ.OTMe8ljEZEqZrdfkL1hhuiVXFGw_taFRVqNTfsycxFDq5FPu1ZSgaTOertyC61cQQXNLqTRo2kHAos8kx8PHAQ";
