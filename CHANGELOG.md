@@ -6,9 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.2.0 - 2021-12-07]
+
 ### Added
 
 - Files
+	- `TODO.md`
 	- `src/layer3.ts`
 - Features
 	- DID resolution [layer 3 - `signed-ietf-json-patch` updates](https://did-tezos-draft.spruceid.com/#signed-ietf-json-patch-updates) on MAINNET (chain id `NetXdQprcVkpaWU`) and GRANADANET (chain id `NetXz969SFaFn8k`)
