@@ -93,9 +93,11 @@ describe("DID Resolver", function () {
     });
 
     describe("Layer 1", function () {
-      it("should successfully resolve an implied DID Document from a valid DID", async function () {
-        const did = "did:tz:granadanet:tz1TzrmTBSuiVHV2VfMnGRMYvTEPCP42oSM8";
+      const did = "did:tz:granadanet:tz1TzrmTBSuiVHV2VfMnGRMYvTEPCP42oSM8";
+      const publicKey =
+        "edpkuix6Lv8vnrz6uDe1w8uaXY7YktitAxn6EHdy2jdzq5n5hZo94n";
 
+      it("should successfully resolve an implied DID Document from a valid DID", async function () {
         const result = await resolver.resolve(did);
 
         expect(result)
@@ -126,10 +128,6 @@ describe("DID Resolver", function () {
       });
 
       it("should successfully add a public key to an implied document", async function () {
-        const did = "did:tz:granadanet:tz1TzrmTBSuiVHV2VfMnGRMYvTEPCP42oSM8";
-        const publicKey =
-          "edpkuix6Lv8vnrz6uDe1w8uaXY7YktitAxn6EHdy2jdzq5n5hZo94n";
-
         const result = await resolver.resolve(did, { publicKey });
 
         expect(result)
@@ -163,9 +161,9 @@ describe("DID Resolver", function () {
     });
 
     describe("Layer 2", function () {
-      it("should successfully resolve a deployed DID Document from a valid DID", async function () {
-        const did = "did:tz:granadanet:tz1Mmhk4yVqnvKkciEgqDBjwNDAn7DtWaPkG";
+      const did = "did:tz:granadanet:tz1Mmhk4yVqnvKkciEgqDBjwNDAn7DtWaPkG";
 
+      it("should successfully resolve a deployed DID Document from a valid DID", async function () {
         const result = await resolver.resolve(did);
 
         expect(result)
@@ -193,11 +191,34 @@ describe("DID Resolver", function () {
         x: "ROm8DWLwygV95uSyAafOsjdRWCTAKu-Hfa4IFBkODtQ",
         d: "l6Oqs9z3qB9XQZrJvw2KPuvvQDNV0pU2AnuKN30yXLA",
       };
+      const did = "did:tz:granadanet:tz1PXpQSpk8kytvLfX2or39jwEmX5smpDYxi";
+      const publicKey =
+        "edpkuAaEA2hfytsz5gfqGWqj1f8md5HLgESDoaKq5eShGEw6okXXLn";
+      const header = {
+        alg: "EdDSA",
+        kid: "did:tz:granadanet:tz1PXpQSpk8kytvLfX2or39jwEmX5smpDYxi#blockchainAccountId",
+      };
+      const payload = {
+        "ietf-json-patch": [
+          {
+            op: "add",
+            path: "/service",
+            value: [
+              {
+                id: "test_service_id",
+                type: "test_service",
+                serviceEndpoint: "test_service_endpoint",
+              },
+            ],
+          },
+        ],
+      };
+      const keyPairEd25519 = importJWK(jwk, "EdBlake2b");
 
       it("should fail applying a patch without public key", async function () {
-        const signedIetfJsonPatch =
-          "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp0ejpkZWxwaGluZXQ6dHoxV3Z2YkVHcEJYR2VUVmJMaVI2RFlCZTFpem1naVl1WmJxI2Jsb2NrY2hhaW5BY2NvdW50SWQifQ.eyJpZXRmLWpzb24tcGF0Y2giOiBbCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIm9wIjogImFkZCIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInBhdGgiOiAiL3NlcnZpY2UvMSIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInZhbHVlIjogewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiaWQiOiAidGVzdF9zZXJ2aWNlX2lkIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInR5cGUiOiAidGVzdF9zZXJ2aWNlIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInNlcnZpY2VFbmRwb2ludCI6ICJ0ZXN0X3NlcnZpY2VfZW5kcG9pbnQiCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBdfQ.OTMe8ljEZEqZrdfkL1hhuiVXFGw_taFRVqNTfsycxFDq5FPu1ZSgaTOertyC61cQQXNLqTRo2kHAos8kx8PHAQ";
-        const did = "did:tz:granadanet:tz1PXpQSpk8kytvLfX2or39jwEmX5smpDYxi";
+        const signedIetfJsonPatch = await new SignJWT(payload)
+          .setProtectedHeader(header)
+          .sign(await keyPairEd25519);
 
         const result = await resolver.resolve(did, { signedIetfJsonPatch });
 
@@ -221,11 +242,11 @@ describe("DID Resolver", function () {
       });
 
       it("should fail applying a patch with a missmatch public key", async function () {
-        const signedIetfJsonPatch =
-          "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp0ejpkZWxwaGluZXQ6dHoxV3Z2YkVHcEJYR2VUVmJMaVI2RFlCZTFpem1naVl1WmJxI2Jsb2NrY2hhaW5BY2NvdW50SWQifQ.eyJpZXRmLWpzb24tcGF0Y2giOiBbCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIm9wIjogImFkZCIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInBhdGgiOiAiL3NlcnZpY2UvMSIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInZhbHVlIjogewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiaWQiOiAidGVzdF9zZXJ2aWNlX2lkIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInR5cGUiOiAidGVzdF9zZXJ2aWNlIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInNlcnZpY2VFbmRwb2ludCI6ICJ0ZXN0X3NlcnZpY2VfZW5kcG9pbnQiCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBdfQ.OTMe8ljEZEqZrdfkL1hhuiVXFGw_taFRVqNTfsycxFDq5FPu1ZSgaTOertyC61cQQXNLqTRo2kHAos8kx8PHAQ";
+        const signedIetfJsonPatch = await new SignJWT(payload)
+          .setProtectedHeader(header)
+          .sign(await keyPairEd25519);
         const publicKey =
           "edpkuix6Lv8vnrz6uDe1w8uaXY7YktitAxn6EHdy2jdzq5n5hZo94n";
-        const did = "did:tz:granadanet:tz1PXpQSpk8kytvLfX2or39jwEmX5smpDYxi";
 
         const result = await resolver.resolve(did, {
           publicKey,
@@ -251,29 +272,10 @@ describe("DID Resolver", function () {
       });
 
       it("should fail applying a patch without header property 'kid'", async function () {
-        const did = "did:tz:granadanet:tz1PXpQSpk8kytvLfX2or39jwEmX5smpDYxi";
-        const header = {
-          alg: "EdDSA",
-        };
-        const payload = {
-          "ietf-json-patch": [
-            {
-              op: "replace",
-              path: "/service/0",
-              value: {
-                id: "test_service_id",
-                type: "test_service",
-                serviceEndpoint: "test_service_endpoint",
-              },
-            },
-          ],
-        };
-        const publicKey =
-          "edpkuAaEA2hfytsz5gfqGWqj1f8md5HLgESDoaKq5eShGEw6okXXLn";
-        const jwt = new SignJWT(payload);
-        jwt.setProtectedHeader(header);
-        const key = await importJWK(jwk, "EdBlake2b");
-        const signedIetfJsonPatch = await jwt.sign(key);
+        const header = { alg: "EdDSA" };
+        const signedIetfJsonPatch = await new SignJWT(payload)
+          .setProtectedHeader(header)
+          .sign(await keyPairEd25519);
 
         const result = await resolver.resolve(did, {
           publicKey,
@@ -300,30 +302,13 @@ describe("DID Resolver", function () {
       });
 
       it("should fail applying a patch with a 'kid' that does not appear on the DID Document", async function () {
-        const did = "did:tz:granadanet:tz1PXpQSpk8kytvLfX2or39jwEmX5smpDYxi";
         const header = {
           alg: "EdDSA",
           kid: "hello",
         };
-        const payload = {
-          "ietf-json-patch": [
-            {
-              op: "replace",
-              path: "/service/0",
-              value: {
-                id: "test_service_id",
-                type: "test_service",
-                serviceEndpoint: "test_service_endpoint",
-              },
-            },
-          ],
-        };
-        const publicKey =
-          "edpkuAaEA2hfytsz5gfqGWqj1f8md5HLgESDoaKq5eShGEw6okXXLn";
-        const jwt = new SignJWT(payload);
-        jwt.setProtectedHeader(header);
-        const key = await importJWK(jwk, "EdBlake2b");
-        const signedIetfJsonPatch = await jwt.sign(key);
+        const signedIetfJsonPatch = await new SignJWT(payload)
+          .setProtectedHeader(header)
+          .sign(await keyPairEd25519);
 
         const result = await resolver.resolve(did, {
           publicKey,
@@ -350,18 +335,10 @@ describe("DID Resolver", function () {
       });
 
       it("should fail applying a patch without payload property 'ietf-json-patch'", async function () {
-        const did = "did:tz:granadanet:tz1PXpQSpk8kytvLfX2or39jwEmX5smpDYxi";
-        const header = {
-          alg: "EdDSA",
-          kid: "did:tz:granadanet:tz1PXpQSpk8kytvLfX2or39jwEmX5smpDYxi#blockchainAccountId",
-        };
         const payload = {};
-        const publicKey =
-          "edpkuAaEA2hfytsz5gfqGWqj1f8md5HLgESDoaKq5eShGEw6okXXLn";
-        const jwt = new SignJWT(payload);
-        jwt.setProtectedHeader(header);
-        const key = await importJWK(jwk, "EdBlake2b");
-        const signedIetfJsonPatch = await jwt.sign(key);
+        const signedIetfJsonPatch = await new SignJWT(payload)
+          .setProtectedHeader(header)
+          .sign(await keyPairEd25519);
 
         const result = await resolver.resolve(did, {
           publicKey,
@@ -382,6 +359,36 @@ describe("DID Resolver", function () {
           .and.to.be.a("string")
           .and.to.equal("Missing 'ietf-json-patch' payload property");
         expect(result.didDocument).to.be.an("object").and.to.not.be.empty;
+        expect(result.didDocumentMetadata)
+          .to.be.an("object")
+          .and.to.have.keys("created", "updated");
+      });
+
+      it("should successfully apply a patch", async function () {
+        const signedIetfJsonPatch = await new SignJWT(payload)
+          .setProtectedHeader(header)
+          .sign(await keyPairEd25519);
+
+        const result = await resolver.resolve(did, {
+          publicKey,
+          signedIetfJsonPatch,
+        });
+
+        expect(result)
+          .to.be.an("object")
+          .and.to.have.keys(
+            "@context",
+            "didResolutionMetadata",
+            "didDocument",
+            "didDocumentMetadata"
+          );
+        expect(result.didResolutionMetadata)
+          .to.be.an("object")
+          .and.to.not.have.property("error");
+        expect(result.didDocument)
+          .to.be.an("object")
+          .and.to.have.property("service")
+          .and.to.deep.equal(payload["ietf-json-patch"][0].value);
         expect(result.didDocumentMetadata)
           .to.be.an("object")
           .and.to.have.keys("created", "updated");
