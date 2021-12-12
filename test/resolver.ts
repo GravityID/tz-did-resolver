@@ -161,9 +161,9 @@ describe("DID Resolver", function () {
     });
 
     describe("Layer 2", function () {
-      const did = "did:tz:granadanet:tz1Mmhk4yVqnvKkciEgqDBjwNDAn7DtWaPkG";
+      it("should successfully resolve a deployed DID Document from a valid DID based on an account address", async function () {
+        const did = "did:tz:granadanet:tz1Mmhk4yVqnvKkciEgqDBjwNDAn7DtWaPkG";
 
-      it("should successfully resolve a deployed DID Document from a valid DID", async function () {
         const result = await resolver.resolve(did);
 
         expect(result)
@@ -181,6 +181,50 @@ describe("DID Resolver", function () {
         expect(result.didDocumentMetadata)
           .to.be.an("object")
           .and.to.have.keys("created", "updated");
+      });
+
+      it("should successfully resolve a deployed DID Document from a valid DID based on a smart contract address", async function () {
+        const did = "did:tz:granadanet:KT1E3nVD75th947krt3BbWqKcbmyZGqnvDUL";
+
+        const result = await resolver.resolve(did);
+
+        expect(result)
+          .to.be.an("object")
+          .and.to.have.keys(
+            "@context",
+            "didResolutionMetadata",
+            "didDocument",
+            "didDocumentMetadata"
+          );
+        expect(result.didResolutionMetadata)
+          .to.be.an("object")
+          .and.to.not.have.property("error");
+        expect(result.didDocument).to.be.an("object").and.to.not.be.empty;
+        expect(result.didDocumentMetadata)
+          .to.be.an("object")
+          .and.to.have.keys("created", "updated");
+      });
+
+      it("should fail resolving from a smart contract address that does not implement Tzip19", async function () {
+        const did = "did:tz:granadanet:KT1JPehwEkAhg1z5RVA8wAccYbDgF2E2itDv";
+
+        const result = await resolver.resolve(did);
+
+        expect(result)
+          .to.be.an("object")
+          .and.to.have.keys(
+            "@context",
+            "didResolutionMetadata",
+            "didDocument",
+            "didDocumentMetadata"
+          );
+        expect(result.didResolutionMetadata)
+          .to.be.an("object")
+          .and.to.have.property("error")
+          .and.to.be.a("string")
+          .and.to.equal("Invalid Tzip19");
+        expect(result.didDocument).to.be.an("object").and.to.not.be.empty;
+        expect(result.didDocumentMetadata).to.be.an("object").and.to.be.empty;
       });
     });
 
