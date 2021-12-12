@@ -4,10 +4,11 @@ import { Prefix } from "@taquito/utils";
 import axios from "axios";
 import {
   DIDResolutionResult,
+  parse,
   ServiceEndpoint,
   VerificationMethod,
-  parse,
 } from "did-resolver";
+import { isTzip019 } from "./utils";
 
 interface ContractAccount {
   type: "contract";
@@ -54,29 +55,33 @@ async function findManager(
     address: string;
   }
 ): Promise<ContractAccount | null> {
-  const contracts = await axios.get<AccountContracts>(
-    `${indexer}/v1/accounts/${address}/contracts`
-  );
+  let managerAddress = "";
 
-  for (let d of contracts.data) {
-    if (d.kind !== "smart_contract") continue;
+  if (address.startsWith(Prefix.KT1)) {
+    if (!(await isTzip019(tezosToolkit, address)))
+      throw new Error("Invalid Tzip19");
 
-    const contract = await tezosToolkit.contract.at(d.address, tzip16);
-    const { metadata } = await contract.tzip16().getMetadata();
-    const views = await contract.tzip16().metadataViews();
-
-    if (!metadata.interfaces) continue;
-    if (!metadata.interfaces.includes("TZIP-019")) continue;
-    if (!(views.GetVerificationMethod instanceof Function)) continue;
-    if (!(views.GetService instanceof Function)) continue;
-
-    const response = await axios.get<ContractAccount>(
-      `${indexer}/v1/accounts/${d.address}`
+    managerAddress = address;
+  } else {
+    const contracts = await axios.get<AccountContracts>(
+      `${indexer}/v1/accounts/${address}/contracts`
     );
-    return response.data;
+
+    for (let d of contracts.data) {
+      if (d.kind !== "smart_contract") continue;
+      if (!(await isTzip019(tezosToolkit, d.address))) continue;
+
+      managerAddress = d.address;
+    }
   }
 
-  return null;
+  if (!managerAddress) return null;
+
+  const response = await axios.get<ContractAccount>(
+    `${indexer}/v1/accounts/${managerAddress}`
+  );
+
+  return response.data;
 }
 
 /**
@@ -96,12 +101,15 @@ export async function update(
     indexer: string;
   }
 ): Promise<void> {
-  if (address.startsWith(Prefix.KT1)) throw new Error("Not implemented");
-
   const _chainId = await tezosToolkit.rpc.getChainId();
-  if (chainId !== _chainId) throw new Error("chainMismatch");
+  if (chainId !== _chainId) throw new Error("chainMissmatch");
 
   if (result.didDocument === null) return;
+
+  if (address.startsWith(Prefix.KT1)) {
+    result.didDocument.verificationMethod = [];
+  }
+
   if (!result.didDocument.verificationMethod) return;
 
   const did = result.didDocument.id;
