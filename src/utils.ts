@@ -1,4 +1,4 @@
-import { ChainIds, TezosToolkit } from "@taquito/taquito";
+import { BigMapAbstraction, ChainIds, TezosToolkit } from "@taquito/taquito";
 import { tzip16 } from "@taquito/tzip16";
 import {
   Prefix,
@@ -35,8 +35,12 @@ export async function isTzip019(
   if (!address.startsWith(Prefix.KT1)) return false;
 
   const contract = await tezosToolkit.contract.at(address, tzip16);
+  const storage = await contract.storage<any>();
+
+  if (!(storage.metadata instanceof BigMapAbstraction)) return false;
 
   const { metadata } = await contract.tzip16().getMetadata();
+
   const views = await contract.tzip16().metadataViews();
 
   if (!metadata.interfaces) return false;
