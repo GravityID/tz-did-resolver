@@ -7,6 +7,7 @@ import {
 } from "@taquito/utils";
 
 enum TezosNetworks {
+  HANGZHOUNET = "hangzhounet",
   GRANADANET = "granadanet",
   MAINNET = "mainnet",
 }
