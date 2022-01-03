@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.4.0 - 2022-01-03]
+
+### Added
+
+- Features
+	- Support for HANGZHOUNET (chain id `NetXZSsxBpMQeAT`)
+
+### Deprecated
+
+- Support for GRANADANET (chain id `NetXz969SFaFn8k`)
+
 ## [1.3.0 - 2021-12-12]
 
 ### Added
