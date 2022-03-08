@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.4.1 - 2022-03-08]
+
+### Fixed
+
+- Update `mocha` dependency
+
 ## [1.4.0 - 2022-01-03]
 
 ### Added
