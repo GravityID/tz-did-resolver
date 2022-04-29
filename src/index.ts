@@ -53,7 +53,7 @@ async function resolve(
     id: did,
   };
 
-  const rpc = options.rpc || `https://${network}.api.tez.ie`;
+  const rpc = options.rpc || `https://${network}.smartpy.io`;
   const tezosToolkit = new TezosToolkit(rpc);
   tezosToolkit.addExtension(new Tzip16Module());
   const indexer = options.indexer || `https://api.${network}.tzkt.io`;
