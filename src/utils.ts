@@ -1,4 +1,4 @@
-import { BigMapAbstraction, ChainIds, TezosToolkit } from "@taquito/taquito";
+import { BigMapAbstraction, TezosToolkit } from "@taquito/taquito";
 import { tzip16 } from "@taquito/tzip16";
 import {
   Prefix,
@@ -6,9 +6,15 @@ import {
   ValidationResult,
 } from "@taquito/utils";
 
+enum ChainIds {
+  ITHACANET = "NetXnHfVqm9iesp",
+  MAINNET = "NetXdQprcVkpaWU",
+  HANGZHOUNET = "NetXZSsxBpMQeAT",
+}
+
 enum TezosNetworks {
+  ITHACANET = "ithacanet",
   HANGZHOUNET = "hangzhounet",
-  GRANADANET = "granadanet",
   MAINNET = "mainnet",
 }
 
