@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- Use `@transmute/*` to verify `signedIetfJsonPatch`
+- Update [`did-resolver`](https://www.npmjs.com/package/did-resolver) dependency to `~3.2.0`
+
 ## [1.4.1 - 2022-03-08]
 
 ### Fixed
