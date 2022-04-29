@@ -6,7 +6,7 @@ import {
   DIDResolutionResult,
   DIDResolver,
   ParsedDID,
-  Resolver,
+  Resolvable,
 } from "did-resolver";
 import { update as updateLayer1 } from "./layer1";
 import { update as updateLayer2 } from "./layer2";
@@ -16,7 +16,7 @@ import { networkToChainId, validateIdentifier } from "./utils";
 async function resolve(
   did: string,
   parsed: ParsedDID,
-  _didResolver: Resolver,
+  _didResolver: Resolvable,
   options: DIDResolutionOptions
 ): Promise<DIDResolutionResult> {
   const result: DIDResolutionResult = {

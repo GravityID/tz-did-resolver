@@ -2,7 +2,8 @@ import { TezosToolkit } from "@taquito/taquito";
 import { b58cdecode, prefix } from "@taquito/utils";
 import { DIDResolutionResult } from "did-resolver";
 import { applyOperation, Operation } from "fast-json-patch";
-import { importJWK, jwtVerify } from "jose";
+import { Ed25519KeyPair } from "@transmute/ed25519-key-pair";
+import { JWS } from "@transmute/jose-ld";
 
 export async function update(
   _tezosToolkit: TezosToolkit,
@@ -18,25 +19,42 @@ export async function update(
 
   if (!publicKey) throw new Error("Need public key for signed patches");
 
+  const [b64Header, b64Payload] = signedIetfJsonPatch.split(".");
+  const buffHeader = Buffer.from(b64Header, "base64");
+  const buffPayload = Buffer.from(b64Payload, "base64");
+  const controller = result.didDocument.id;
+  const options = {
+    detached: false,
+    header: {
+      kid: `${controller}#blockchainAccountId`,
+    },
+  };
   const buff = Buffer.from(b58cdecode(publicKey, prefix.edpk));
-  const jwk = await importJWK({
-    alg: "EdBlake2b",
-    crv: "Ed25519",
-    kty: "OKP",
-    x: buff.toString("base64"),
+  const keyPair = await Ed25519KeyPair.from({
+    id: `${controller}#blockchainAccountId`,
+    type: "JsonWebKey2020",
+    controller,
+    publicKeyJwk: {
+      crv: "Ed25519",
+      kty: "OKP",
+      x: buff.toString("base64"),
+    },
+  });
+  const verifier = JWS.createVerifier(keyPair.verifier(), "EdDSA", options);
+  const verified = await verifier.verify({
+    data: buffPayload,
+    signature: signedIetfJsonPatch,
   });
 
-  const { payload, protectedHeader } = await jwtVerify(
-    signedIetfJsonPatch,
-    jwk
-  );
+  if (!verified) throw new Error("SignedIetfJsonPatch verification failed");
 
-  if (!protectedHeader.kid) throw new Error("Missing 'kid' header property");
+  const header = JSON.parse(buffHeader.toString());
+  const payload = JSON.parse(buffPayload.toString());
+
+  if (!header.kid) throw new Error("Missing 'kid' header property");
 
   const authentication = result.didDocument.authentication.find((vm) => {
-    return typeof vm === "string"
-      ? vm === protectedHeader.kid
-      : vm.id === protectedHeader.kid;
+    return typeof vm === "string" ? vm === header.kid : vm.id === header.kid;
   });
   if (!authentication) throw new Error("Not authorized to propose updates");
 
