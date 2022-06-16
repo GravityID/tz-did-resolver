@@ -7,14 +7,14 @@ import {
 } from "@taquito/utils";
 
 enum ChainIds {
+  JAKARTANET = "NetXLH1uAxK7CCh",
   ITHACANET = "NetXnHfVqm9iesp",
   MAINNET = "NetXdQprcVkpaWU",
-  HANGZHOUNET = "NetXZSsxBpMQeAT",
 }
 
 enum TezosNetworks {
+  JAKARTANET = "jakartanet",
   ITHACANET = "ithacanet",
-  HANGZHOUNET = "hangzhounet",
   MAINNET = "mainnet",
 }
 
