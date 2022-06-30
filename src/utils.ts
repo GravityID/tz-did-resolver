@@ -75,3 +75,13 @@ export function validateIdentifier(id: string):
 
   return { address, network };
 }
+
+export function buildIndexerFromNetwork(network: string): string {
+  if (network === "mainnet") return "https://api.tzstats.com";
+
+  const protocol = network.slice(0, -3);
+
+  const url = `https://api.${protocol}.tzstats.com`;
+
+  return url;
+}

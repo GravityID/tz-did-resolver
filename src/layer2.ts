@@ -10,34 +10,66 @@ import {
 } from "did-resolver";
 import { isTzip019 } from "./utils";
 
-interface ContractAccount {
-  type: "contract";
+interface AccountContract {
+  row_id: number;
   address: string;
-  kind: string;
-  balance: number;
-  creator: {
-    address: string;
-  };
-  numContracts: number;
-  numDelegations: number;
-  numOriginations: number;
-  numTransactions: number;
-  numReveals: number;
-  numMigrations: number;
-  firstActivity: number;
-  firstActivityTime: string;
-  lastActivity: number;
-  lastActivityTime: string;
-  typeHash: number;
-  codeHash: number;
+  address_type: "contract";
+  pubkey: string;
+  counter: number;
+  creator: string;
+  first_in: number;
+  first_out: number;
+  last_in: number;
+  last_out: number;
+  first_seen: number;
+  last_seen: number;
+  first_seen_time: string;
+  last_seen_time: string;
+  total_received: number;
+  total_sent: number;
+  total_burned: number;
+  total_fees_paid: number;
+  spendable_balance: number;
+  frozen_bond: number;
+  lost_bond: number;
+  is_funded: boolean;
+  is_activated: boolean;
+  is_delegated: boolean;
+  is_revealed: boolean;
+  is_baker: boolean;
+  is_contract: boolean;
+  n_ops: number;
+  n_ops_failed: number;
+  n_tx: number;
+  n_delegation: number;
+  n_origination: number;
+  n_constants: number;
+  token_gen_min: number;
+  token_gen_max: number;
 }
 
-interface AccountContract {
-  kind: string;
+interface Contract {
+  account_id: number;
   address: string;
-  balance: number;
-  creationLevel: number;
-  creationTime: string;
+  creator: string;
+  baker: string;
+  storage_size: number;
+  storage_paid: number;
+  storage_burn: number;
+  first_seen: number;
+  last_seen: number;
+  first_seen_time: string;
+  last_seen_time: string;
+  n_calls_success: number;
+  n_calls_failed: number;
+  iface_hash: string;
+  code_hash: string;
+  storage_hash: string;
+  call_stats: {
+    default: number;
+  };
+  features: Array<string>;
+  interfaces: Array<string>;
 }
 
 type AccountContracts = Array<AccountContract>;
@@ -54,7 +86,7 @@ async function findManager(
     indexer: string;
     address: string;
   }
-): Promise<ContractAccount | null> {
+): Promise<Contract | null> {
   let managerAddress = "";
 
   if (address.startsWith(Prefix.KT1)) {
@@ -64,21 +96,22 @@ async function findManager(
     managerAddress = address;
   } else {
     const contracts = await axios.get<AccountContracts>(
-      `${indexer}/v1/accounts/${address}/contracts`
+      `${indexer}/explorer/account/${address}/contracts`
     );
 
     for (let d of contracts.data) {
-      if (d.kind !== "smart_contract") continue;
+      if (d.address_type !== "contract") continue;
       if (!(await isTzip019(tezosToolkit, d.address))) continue;
 
       managerAddress = d.address;
+      break;
     }
   }
 
   if (!managerAddress) return null;
 
-  const response = await axios.get<ContractAccount>(
-    `${indexer}/v1/accounts/${managerAddress}`
+  const response = await axios.get<Contract>(
+    `${indexer}/explorer/contract/${managerAddress}`
   );
 
   return response.data;
@@ -156,6 +189,6 @@ export async function update(
   };
   result.didDocument.service = [service];
 
-  result.didDocumentMetadata.created = d.firstActivityTime;
-  result.didDocumentMetadata.updated = d.lastActivityTime;
+  result.didDocumentMetadata.created = d.first_seen_time;
+  result.didDocumentMetadata.updated = d.last_seen_time;
 }

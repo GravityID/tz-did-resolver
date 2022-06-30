@@ -11,7 +11,11 @@ import {
 import { update as updateLayer1 } from "./layer1";
 import { update as updateLayer2 } from "./layer2";
 import { update as updateLayer3 } from "./layer3";
-import { networkToChainId, validateIdentifier } from "./utils";
+import {
+  networkToChainId,
+  validateIdentifier,
+  buildIndexerFromNetwork,
+} from "./utils";
 
 async function resolve(
   did: string,
@@ -56,7 +60,8 @@ async function resolve(
   const rpc = options.rpc || `https://${network}.smartpy.io`;
   const tezosToolkit = new TezosToolkit(rpc);
   tezosToolkit.addExtension(new Tzip16Module());
-  const indexer = options.indexer || `https://api.${network}.tzkt.io`;
+  const defaultIndexer = buildIndexerFromNetwork(network);
+  const indexer = options.indexer || defaultIndexer;
 
   const { publicKey, signedIetfJsonPatch } = options;
 
