@@ -6,8 +6,8 @@ import tz from "../src/index";
 
 describe("DID Resolver", function () {
   let resolver: Resolver;
-  const indexer = "https://indexer.custom.gravity.earth";
-  const rpc = "https://sandbox.custom.gravity.earth";
+  const indexer = "https://indexer.jakartanet.gravity.earth";
+  const rpc = "https://sandbox.jakartanet.gravity.earth";
 
   describe("getResolver", function () {
     it("should successfully create a Resolver with the Tezos DID Method resolver", async function () {
@@ -95,13 +95,13 @@ describe("DID Resolver", function () {
     });
 
     describe("Layer 1", function () {
-      const did = "did:tz:custom:tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb";
+      const did = "did:tz:custom:tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6";
       const publicKey =
-        "edpkvGfYw3LyB1UcCahKQk4rF2tvbMUk8GFiTuMjL75uGXrpvKXhjn";
+        "edpkurPsQ8eUApnLUJ9ZPDvu98E8VNj4KtJa1aZr16Cr5ow5VHKnz4";
 
       it("should successfully resolve an implied DID Document from a valid DID", async function () {
         const result = await resolver.resolve(did, { indexer, rpc });
-        console.log("yo", result);
+
         expect(result)
           .to.be.an("object")
           .and.to.have.keys(
@@ -164,7 +164,7 @@ describe("DID Resolver", function () {
 
     describe("Layer 2", function () {
       it("should successfully resolve a deployed DID Document from a valid DID based on an account address", async function () {
-        const did = "did:tz:custom:tz1Mmhk4yVqnvKkciEgqDBjwNDAn7DtWaPkG";
+        const did = "did:tz:custom:tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb";
 
         const result = await resolver.resolve(did, { indexer, rpc });
 
@@ -186,7 +186,7 @@ describe("DID Resolver", function () {
       });
 
       it("should successfully resolve a deployed DID Document from a valid DID based on a smart contract address", async function () {
-        const did = "did:tz:custom:KT1PfaxsCuHmpds8crHNCzdVMjuEvjW5B9tV";
+        const did = "did:tz:custom:KT1Ee7u3gGAVgYtbngWiLsexHbXBwKwELZ9C";
 
         const result = await resolver.resolve(did, { indexer, rpc });
 
@@ -208,7 +208,7 @@ describe("DID Resolver", function () {
       });
 
       it("should fail resolving from a smart contract address that does not implement Tzip19", async function () {
-        const did = "did:tz:custom:KT1JPehwEkAhg1z5RVA8wAccYbDgF2E2itDv";
+        const did = "did:tz:custom:KT1PfaxsCuHmpds8crHNCzdVMjuEvjW5B9tV";
 
         const result = await resolver.resolve(did, { indexer, rpc });
 
@@ -286,9 +286,7 @@ describe("DID Resolver", function () {
           .and.to.be.a("string")
           .and.to.equal("Need public key for signed patches");
         expect(result.didDocument).to.be.an("object").and.to.not.be.empty;
-        expect(result.didDocumentMetadata)
-          .to.be.an("object")
-          .and.to.have.keys("created", "updated");
+        expect(result.didDocumentMetadata).to.be.an("object");
       });
 
       it("should fail applying a patch with a missmatch public key", async function () {
@@ -318,9 +316,7 @@ describe("DID Resolver", function () {
           .and.to.have.property("error")
           .and.to.be.a("string");
         expect(result.didDocument).to.be.an("object").and.to.not.be.empty;
-        expect(result.didDocumentMetadata)
-          .to.be.an("object")
-          .and.to.have.keys("created", "updated");
+        expect(result.didDocumentMetadata).to.be.an("object");
       });
 
       it("should fail applying a patch without header property 'kid'", async function () {
@@ -350,9 +346,7 @@ describe("DID Resolver", function () {
           .and.to.be.a("string")
           .and.to.equal("Missing 'kid' header property");
         expect(result.didDocument).to.be.an("object").and.to.not.be.empty;
-        expect(result.didDocumentMetadata)
-          .to.be.an("object")
-          .and.to.have.keys("created", "updated");
+        expect(result.didDocumentMetadata).to.be.an("object");
       });
 
       it("should fail applying a patch with a 'kid' that does not appear on the DID Document", async function () {
@@ -385,9 +379,7 @@ describe("DID Resolver", function () {
           .and.to.be.a("string")
           .and.to.equal("Not authorized to propose updates");
         expect(result.didDocument).to.be.an("object").and.to.not.be.empty;
-        expect(result.didDocumentMetadata)
-          .to.be.an("object")
-          .and.to.have.keys("created", "updated");
+        expect(result.didDocumentMetadata).to.be.an("object");
       });
 
       it("should fail applying a patch without payload property 'ietf-json-patch'", async function () {
@@ -417,9 +409,7 @@ describe("DID Resolver", function () {
           .and.to.be.a("string")
           .and.to.equal("Missing 'ietf-json-patch' payload property");
         expect(result.didDocument).to.be.an("object").and.to.not.be.empty;
-        expect(result.didDocumentMetadata)
-          .to.be.an("object")
-          .and.to.have.keys("created", "updated");
+        expect(result.didDocumentMetadata).to.be.an("object");
       });
 
       it("should successfully apply a patch", async function () {
@@ -449,9 +439,7 @@ describe("DID Resolver", function () {
           .to.be.an("object")
           .and.to.have.property("service")
           .and.to.deep.equal(payload["ietf-json-patch"][0].value);
-        expect(result.didDocumentMetadata)
-          .to.be.an("object")
-          .and.to.have.keys("created", "updated");
+        expect(result.didDocumentMetadata).to.be.an("object");
       });
     });
   });

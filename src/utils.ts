@@ -6,27 +6,15 @@ import {
   ValidationResult,
 } from "@taquito/utils";
 
-enum ChainIds {
-  JAKARTANET = "NetXLH1uAxK7CCh",
-  ITHACANET = "NetXnHfVqm9iesp",
-  MAINNET = "NetXdQprcVkpaWU",
-}
-
 enum TezosNetworks {
   JAKARTANET = "jakartanet",
   ITHACANET = "ithacanet",
   MAINNET = "mainnet",
 }
 
-export function networkToChainId(network: string): ChainIds | undefined {
-  const entry = Object.entries(ChainIds).find(([_network, _chainId]) => {
-    return network.toUpperCase() === _network;
-  });
-
-  return entry && entry[1];
-}
-
 export function validateNetwork(network: string): boolean {
+  if (network === "custom") return true;
+
   return Object.values(TezosNetworks).includes(network as TezosNetworks);
 }
 

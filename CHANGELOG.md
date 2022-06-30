@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
-- Use `tzindex` [layer2] (https://github.com/blockwatch-cc/tzindex)
+- Use [`tzindex`] (https://github.com/blockwatch-cc/tzindex)
 
 ### Removed
 

@@ -11,11 +11,7 @@ import {
 import { update as updateLayer1 } from "./layer1";
 import { update as updateLayer2 } from "./layer2";
 import { update as updateLayer3 } from "./layer3";
-import {
-  networkToChainId,
-  validateIdentifier,
-  buildIndexerFromNetwork,
-} from "./utils";
+import { validateIdentifier, buildIndexerFromNetwork } from "./utils";
 
 async function resolve(
   did: string,
@@ -40,13 +36,11 @@ async function resolve(
 
   const { network, address } = validIdentifier;
 
-  const chainId = networkToChainId(network);
-  if (!chainId) {
-    return {
-      ...result,
-      didResolutionMetadata: { error: "invalidDid" },
-    };
-  }
+  const rpc = options.rpc || `https://${network}.smartpy.io`;
+  const tezosToolkit = new TezosToolkit(rpc);
+  tezosToolkit.addExtension(new Tzip16Module());
+
+  const chainId = await tezosToolkit.rpc.getChainId();
 
   result.didResolutionMetadata.contentType = "application/did+ld+json";
   result.didDocument = {
@@ -57,9 +51,6 @@ async function resolve(
     id: did,
   };
 
-  const rpc = options.rpc || `https://${network}.smartpy.io`;
-  const tezosToolkit = new TezosToolkit(rpc);
-  tezosToolkit.addExtension(new Tzip16Module());
   const defaultIndexer = buildIndexerFromNetwork(network);
   const indexer = options.indexer || defaultIndexer;
 

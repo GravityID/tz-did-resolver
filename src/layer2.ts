@@ -134,9 +134,6 @@ export async function update(
     indexer: string;
   }
 ): Promise<void> {
-  const _chainId = await tezosToolkit.rpc.getChainId();
-  if (chainId !== _chainId) throw new Error("chainMissmatch");
-
   if (result.didDocument === null) return;
 
   if (address.startsWith(Prefix.KT1)) {
@@ -148,6 +145,7 @@ export async function update(
   const did = result.didDocument.id;
 
   const d = await findManager(tezosToolkit, { indexer, address });
+
   if (d === null) return;
 
   const contract = await tezosToolkit.contract.at(d.address, tzip16);
@@ -177,7 +175,7 @@ export async function update(
     id: _verificationMethod,
     type: _type,
     controller: _controller,
-    blockchainAccountId: `tezos:${_chainId}:${_address}`,
+    blockchainAccountId: `tezos:${chainId}:${_address}`,
   };
   result.didDocument.verificationMethod.push(verificationMethod);
 
