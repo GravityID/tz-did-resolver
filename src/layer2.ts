@@ -1,7 +1,7 @@
 import { TezosToolkit } from "@taquito/taquito";
 import { tzip16 } from "@taquito/tzip16";
 import { Prefix } from "@taquito/utils";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import {
   DIDResolutionResult,
   parse,
@@ -95,11 +95,20 @@ async function findManager(
 
     managerAddress = address;
   } else {
-    const contracts = await axios.get<AccountContracts>(
-      `${indexer}/explorer/account/${address}/contracts`
+    const conf: AxiosRequestConfig = {
+      validateStatus(status: number) {
+        return (status >= 200 && status < 300) || status == 404;
+      },
+    };
+
+    const response = await axios.get<AccountContracts>(
+      `${indexer}/explorer/account/${address}/contracts`,
+      conf
     );
 
-    for (let d of contracts.data) {
+    const contracts = response.status === 404 ? [] : response.data;
+
+    for (let d of contracts) {
       if (d.address_type !== "contract") continue;
       if (!(await isTzip019(tezosToolkit, d.address))) continue;
 
