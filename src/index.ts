@@ -47,6 +47,9 @@ async function resolve(
     "@context": [
       "https://www.w3.org/ns/did/v1",
       "https://w3id.org/security/v1",
+      "https://w3id.org/security/v2",
+      "https://w3id.org/security/suites/jws-2020/v1",
+      "https://w3id.org/security/suites/bls12381-2020/v1",
     ],
     id: did,
   };
