@@ -7,8 +7,8 @@ import {
 } from "@taquito/utils";
 
 enum TezosNetworks {
+  KATHMANDUNET = "kathmandunet",
   JAKARTANET = "jakartanet",
-  ITHACANET = "ithacanet",
   MAINNET = "mainnet",
 }
 

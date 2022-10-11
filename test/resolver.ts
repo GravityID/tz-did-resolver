@@ -6,8 +6,8 @@ import tz from "../src/index";
 
 describe("DID Resolver", function () {
   let resolver: Resolver;
-  const indexer = "https://indexer.jakartanet.gravity.earth";
-  const rpc = "https://sandbox.jakartanet.gravity.earth";
+  // const indexer = "https://indexer.kathmandunet.gravity.earth";
+  const rpc = "https://kathmandunet.ecadinfra.com";
 
   describe("getResolver", function () {
     it("should successfully create a Resolver with the Tezos DID Method resolver", async function () {
@@ -35,7 +35,7 @@ describe("DID Resolver", function () {
   describe("resolve", async function () {
     it("should fail resolving from a DID that is not respecting the DID Syntax", async function () {
       const did = faker.random.alphaNumeric();
-      const result = await resolver.resolve(did, { indexer, rpc });
+      const result = await resolver.resolve(did, { rpc });
 
       expect(result)
         .to.be.an("object")
@@ -55,7 +55,7 @@ describe("DID Resolver", function () {
 
     it("should fail resolving from a DID that is not using a known DID Method", async function () {
       const did = "did:eth:" + faker.random.alphaNumeric();
-      const result = await resolver.resolve(did, { indexer, rpc });
+      const result = await resolver.resolve(did, { rpc });
 
       expect(result)
         .to.be.an("object")
@@ -75,7 +75,7 @@ describe("DID Resolver", function () {
 
     it("should fail resolving from a DID that has an invalid Tezos address as specific identifier", async function () {
       const did = "did:tz:" + faker.random.alphaNumeric();
-      const result = await resolver.resolve(did, { indexer, rpc });
+      const result = await resolver.resolve(did, { rpc });
 
       expect(result)
         .to.be.an("object")
@@ -95,12 +95,12 @@ describe("DID Resolver", function () {
     });
 
     describe("Layer 1", function () {
-      const did = "did:tz:custom:tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6";
+      const did = "did:tz:kathmandunet:tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6";
       const publicKey =
         "edpkurPsQ8eUApnLUJ9ZPDvu98E8VNj4KtJa1aZr16Cr5ow5VHKnz4";
 
       it("should successfully resolve an implied DID Document from a valid DID", async function () {
-        const result = await resolver.resolve(did, { indexer, rpc });
+        const result = await resolver.resolve(did, { rpc });
 
         expect(result)
           .to.be.an("object")
@@ -130,7 +130,7 @@ describe("DID Resolver", function () {
       });
 
       it("should successfully add a public key to an implied document", async function () {
-        const result = await resolver.resolve(did, { indexer, rpc, publicKey });
+        const result = await resolver.resolve(did, { rpc, publicKey });
 
         expect(result)
           .to.be.an("object")
@@ -162,73 +162,73 @@ describe("DID Resolver", function () {
       });
     });
 
-    describe("Layer 2", function () {
-      it("should successfully resolve a deployed DID Document from a valid DID based on an account address", async function () {
-        const did = "did:tz:custom:tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb";
+    // describe("Layer 2", function () {
+    //   it("should successfully resolve a deployed DID Document from a valid DID based on an account address", async function () {
+    //     const did = "did:tz:kathmandunet:tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb";
 
-        const result = await resolver.resolve(did, { indexer, rpc });
+    //     const result = await resolver.resolve(did, { rpc });
 
-        expect(result)
-          .to.be.an("object")
-          .and.to.have.keys(
-            "@context",
-            "didResolutionMetadata",
-            "didDocument",
-            "didDocumentMetadata"
-          );
-        expect(result.didResolutionMetadata)
-          .to.be.an("object")
-          .and.to.not.have.property("error");
-        expect(result.didDocument).to.be.an("object").and.to.not.be.empty;
-        expect(result.didDocumentMetadata)
-          .to.be.an("object")
-          .and.to.have.keys("created", "updated");
-      });
+    //     expect(result)
+    //       .to.be.an("object")
+    //       .and.to.have.keys(
+    //         "@context",
+    //         "didResolutionMetadata",
+    //         "didDocument",
+    //         "didDocumentMetadata"
+    //       );
+    //     expect(result.didResolutionMetadata)
+    //       .to.be.an("object")
+    //       .and.to.not.have.property("error");
+    //     expect(result.didDocument).to.be.an("object").and.to.not.be.empty;
+    //     expect(result.didDocumentMetadata)
+    //       .to.be.an("object")
+    //       .and.to.have.keys("created", "updated");
+    //   });
 
-      it("should successfully resolve a deployed DID Document from a valid DID based on a smart contract address", async function () {
-        const did = "did:tz:custom:KT1Ee7u3gGAVgYtbngWiLsexHbXBwKwELZ9C";
+    //   it("should successfully resolve a deployed DID Document from a valid DID based on a smart contract address", async function () {
+    //     const did = "did:tz:kathmandunet:KT1Ee7u3gGAVgYtbngWiLsexHbXBwKwELZ9C";
 
-        const result = await resolver.resolve(did, { indexer, rpc });
+    //     const result = await resolver.resolve(did, { rpc });
 
-        expect(result)
-          .to.be.an("object")
-          .and.to.have.keys(
-            "@context",
-            "didResolutionMetadata",
-            "didDocument",
-            "didDocumentMetadata"
-          );
-        expect(result.didResolutionMetadata)
-          .to.be.an("object")
-          .and.to.not.have.property("error");
-        expect(result.didDocument).to.be.an("object").and.to.not.be.empty;
-        expect(result.didDocumentMetadata)
-          .to.be.an("object")
-          .and.to.have.keys("created", "updated");
-      });
+    //     expect(result)
+    //       .to.be.an("object")
+    //       .and.to.have.keys(
+    //         "@context",
+    //         "didResolutionMetadata",
+    //         "didDocument",
+    //         "didDocumentMetadata"
+    //       );
+    //     expect(result.didResolutionMetadata)
+    //       .to.be.an("object")
+    //       .and.to.not.have.property("error");
+    //     expect(result.didDocument).to.be.an("object").and.to.not.be.empty;
+    //     expect(result.didDocumentMetadata)
+    //       .to.be.an("object")
+    //       .and.to.have.keys("created", "updated");
+    //   });
 
-      it("should fail resolving from a smart contract address that does not implement Tzip19", async function () {
-        const did = "did:tz:custom:KT1PfaxsCuHmpds8crHNCzdVMjuEvjW5B9tV";
+    //   it("should fail resolving from a smart contract address that does not implement Tzip19", async function () {
+    //     const did = "did:tz:kathmandunet:KT1PfaxsCuHmpds8crHNCzdVMjuEvjW5B9tV";
 
-        const result = await resolver.resolve(did, { indexer, rpc });
+    //     const result = await resolver.resolve(did, { rpc });
 
-        expect(result)
-          .to.be.an("object")
-          .and.to.have.keys(
-            "@context",
-            "didResolutionMetadata",
-            "didDocument",
-            "didDocumentMetadata"
-          );
-        expect(result.didResolutionMetadata)
-          .to.be.an("object")
-          .and.to.have.property("error")
-          .and.to.be.a("string")
-          .and.to.equal("Invalid Tzip19");
-        expect(result.didDocument).to.be.an("object").and.to.not.be.empty;
-        expect(result.didDocumentMetadata).to.be.an("object").and.to.be.empty;
-      });
-    });
+    //     expect(result)
+    //       .to.be.an("object")
+    //       .and.to.have.keys(
+    //         "@context",
+    //         "didResolutionMetadata",
+    //         "didDocument",
+    //         "didDocumentMetadata"
+    //       );
+    //     expect(result.didResolutionMetadata)
+    //       .to.be.an("object")
+    //       .and.to.have.property("error")
+    //       .and.to.be.a("string")
+    //       .and.to.equal("Invalid Tzip19");
+    //     expect(result.didDocument).to.be.an("object").and.to.not.be.empty;
+    //     expect(result.didDocumentMetadata).to.be.an("object").and.to.be.empty;
+    //   });
+    // });
 
     describe("Layer 3", function () {
       const jwk = {
@@ -237,12 +237,12 @@ describe("DID Resolver", function () {
         x: "ROm8DWLwygV95uSyAafOsjdRWCTAKu-Hfa4IFBkODtQ",
         d: "l6Oqs9z3qB9XQZrJvw2KPuvvQDNV0pU2AnuKN30yXLA",
       };
-      const did = "did:tz:custom:tz1PXpQSpk8kytvLfX2or39jwEmX5smpDYxi";
+      const did = "did:tz:kathmandunet:tz1PXpQSpk8kytvLfX2or39jwEmX5smpDYxi";
       const publicKey =
         "edpkuAaEA2hfytsz5gfqGWqj1f8md5HLgESDoaKq5eShGEw6okXXLn";
       const header = {
         alg: "EdDSA",
-        kid: "did:tz:custom:tz1PXpQSpk8kytvLfX2or39jwEmX5smpDYxi#blockchainAccountId",
+        kid: "did:tz:kathmandunet:tz1PXpQSpk8kytvLfX2or39jwEmX5smpDYxi#blockchainAccountId",
       };
       const payload = {
         "ietf-json-patch": [
@@ -267,7 +267,6 @@ describe("DID Resolver", function () {
           .sign(await keyPairEd25519);
 
         const result = await resolver.resolve(did, {
-          indexer,
           rpc,
           signedIetfJsonPatch,
         });
@@ -297,7 +296,6 @@ describe("DID Resolver", function () {
           "edpkuix6Lv8vnrz6uDe1w8uaXY7YktitAxn6EHdy2jdzq5n5hZo94n";
 
         const result = await resolver.resolve(did, {
-          indexer,
           rpc,
           publicKey,
           signedIetfJsonPatch,
@@ -326,7 +324,6 @@ describe("DID Resolver", function () {
           .sign(await keyPairEd25519);
 
         const result = await resolver.resolve(did, {
-          indexer,
           rpc,
           publicKey,
           signedIetfJsonPatch,
@@ -359,7 +356,6 @@ describe("DID Resolver", function () {
           .sign(await keyPairEd25519);
 
         const result = await resolver.resolve(did, {
-          indexer,
           rpc,
           publicKey,
           signedIetfJsonPatch,
@@ -389,7 +385,6 @@ describe("DID Resolver", function () {
           .sign(await keyPairEd25519);
 
         const result = await resolver.resolve(did, {
-          indexer,
           rpc,
           publicKey,
           signedIetfJsonPatch,
@@ -418,7 +413,6 @@ describe("DID Resolver", function () {
           .sign(await keyPairEd25519);
 
         const result = await resolver.resolve(did, {
-          indexer,
           rpc,
           publicKey,
           signedIetfJsonPatch,
