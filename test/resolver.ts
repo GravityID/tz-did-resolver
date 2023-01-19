@@ -7,7 +7,7 @@ import tz from "../src/index";
 describe("DID Resolver", function () {
   let resolver: Resolver;
   // const indexer = "https://indexer.kathmandunet.gravity.earth";
-  const rpc = "https://kathmandunet.ecadinfra.com";
+  const rpc = "https://limanet.ecadinfra.com";
 
   describe("getResolver", function () {
     it("should successfully create a Resolver with the Tezos DID Method resolver", async function () {
@@ -95,7 +95,7 @@ describe("DID Resolver", function () {
     });
 
     describe("Layer 1", function () {
-      const did = "did:tz:kathmandunet:tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6";
+      const did = "did:tz:limanet:tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6";
       const publicKey =
         "edpkurPsQ8eUApnLUJ9ZPDvu98E8VNj4KtJa1aZr16Cr5ow5VHKnz4";
 
@@ -237,12 +237,12 @@ describe("DID Resolver", function () {
         x: "ROm8DWLwygV95uSyAafOsjdRWCTAKu-Hfa4IFBkODtQ",
         d: "l6Oqs9z3qB9XQZrJvw2KPuvvQDNV0pU2AnuKN30yXLA",
       };
-      const did = "did:tz:kathmandunet:tz1PXpQSpk8kytvLfX2or39jwEmX5smpDYxi";
+      const did = "did:tz:limanet:tz1PXpQSpk8kytvLfX2or39jwEmX5smpDYxi";
       const publicKey =
         "edpkuAaEA2hfytsz5gfqGWqj1f8md5HLgESDoaKq5eShGEw6okXXLn";
       const header = {
         alg: "EdDSA",
-        kid: "did:tz:kathmandunet:tz1PXpQSpk8kytvLfX2or39jwEmX5smpDYxi#blockchainAccountId",
+        kid: "did:tz:limanet:tz1PXpQSpk8kytvLfX2or39jwEmX5smpDYxi#blockchainAccountId",
       };
       const payload = {
         "ietf-json-patch": [
