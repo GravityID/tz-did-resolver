@@ -1,6 +1,6 @@
 {
   "name": "tz-did-resolver",
-  "version": "1.12.0",
+  "version": "1.13.0",
   "description": "W3C compliant DID Resolver for the Tezos DID Method",
   "bin": {
     "tz-did-resolver": "bin/cli.js"
@@ -41,9 +41,9 @@
   },
   "homepage": "https://github.com/GravityID/tz-did-resolver#readme",
   "dependencies": {
-    "@taquito/taquito": "~13.0.0",
-    "@taquito/tzip16": "~13.0.0",
-    "@taquito/utils": "~13.0.0",
+    "@taquito/taquito": "~16.0.0",
+    "@taquito/tzip16": "~16.0.0",
+    "@taquito/utils": "~16.0.0",
     "@transmute/ed25519-key-pair": "^0.7.0-unstable.59",
     "@transmute/jose-ld": "^0.7.0-unstable.59",
     "axios": "^0.24.0",
